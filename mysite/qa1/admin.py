@@ -68,15 +68,14 @@ class Mcq_Question_Form(forms.ModelForm):
         
 class Mcq_Question_Admin(admin.ModelAdmin):
     form = Mcq_Question_Form
-    list_display = ('id','question_text','reading_content', 'subtopic1', 
-      'reading_topic', 'uploader', 'tag5', 'pub_date', 'edit_date')
-    list_display_links = ('id', 'question_text',)
+    list_display = ( 'id','get_question_text','question_set','reading_content', 'subtopic1', 
+      'reading_topic', 'uploader', 'get_pub_date', 'edit_date', )
+    list_display_links = ('id', 'get_question_text',)
 
 
-    list_filter = ( 'pub_date', 'edit_date','tag_topic', 'tag_sub_topic', 
-                   'tag_content','tag1','tag2','tag3', 'tag4', 'tag5' )
+    list_filter = ( 'pub_date', 'edit_date', 'question_set', 'reading_topic', 'subtopic1','reading_content')
 #    search_fields = ('tag_set__tag_text','question_text')
-    search_fields = ( 'id', 'tag_topic', 'tag_sub_topic', 'tag_content',
+    search_fields = ( 'id', 
       'question_text',
                     'tag1', 'tag2', 'tag3', 'tag4', 'tag5')
 
@@ -128,13 +127,23 @@ class Mcq_Question_Admin(admin.ModelAdmin):
           ),
 
          (
-          'MCQ Answer: ',  {'fields': ['mcq_answer', 'mcq_answer2']}
+          'MCQ Answer: ',  {'fields': ['mcq_answer']}
           ),
 
          (
           'MCQ  Tag: ',  {'fields': ['tag1', 'tag2', 'tag3', 'tag4', 
 
-          'tag5', 'tag_topic','tag_sub_topic', 'tag_content']}
+                       'tag5'] ,
+
+                        'classes': ('collapse', 'extrapretty'),
+
+                       }
+
+                  
+
+
+
+         
           ),
 
         
@@ -239,12 +248,12 @@ def manage_notification(request, obj, form, change):
 
 class Question_Set_Admin(admin.ModelAdmin):
     search_fields = ('question_set_text', )
-    list_filter = ('pub_date', 'edit_date', 'is_free',)
-    list_display = ('id','question_set_text', 'uploader', 'is_free','pub_date', 'edit_date','start_date', 'end_date',)
+    list_filter = ( 'is_free', 'question_topic','subtopic1', )
+    list_display = ('id','question_set_text', 'uploader', 'is_free', 'question_topic','start_date', 'end_date',)
     list_display_links = ('id', 'question_set_text',)
 
 
-    filter_horizontal = ('mcq_question', 'subscription_plan', 'reading_content')
+    filter_horizontal = ('subscription_plan', 'reading_content')
     raw_id_fields = ('question_topic', 'subtopic1', 'reading_topic', )
     exclude = ('pub_date', 'edit_date')
 
@@ -300,9 +309,9 @@ class Question_Set_Admin(admin.ModelAdmin):
 
 
 
-         (
-          'Select MCQ For This Question Set: ',  {'fields': ['mcq_question']}
-          ),
+         # (
+         #  'Select MCQ For This Question Set: ',  {'fields': ['mcq_question']}
+         #  ),
 
 
        

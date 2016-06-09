@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.admindocs',
 
     'django.contrib.sites',
 
@@ -76,6 +77,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.admindocs.middleware.XViewMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'

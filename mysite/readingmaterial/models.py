@@ -32,6 +32,8 @@ class SubTopic1 (models.Model):
     def __unicode__(self):
         return self.subtopic1_text
 
+
+
     class Meta:
         verbose_name = "Sub Topic Of Content"
 
@@ -97,9 +99,14 @@ class ReadingContent(models.Model):
 
         self.save() 
 
+    # def get_subtopic1(self):
+
+        
 
     def __unicode__(self):
         return self.content_title
+
+
 
 class ContentNotes(models.Model):
     content_notes = models.TextField()
@@ -143,7 +150,7 @@ class ContentComment(models.Model):
 
 class Quick_Question(models.Model):
     quick_question_text = models.TextField()
-    quick_question_answer = models.TextField()
+    quick_question_answer = models.TextField(null=True, blank=True)
 
     uploader = models.ForeignKey(User, null=True, blank=True)
     content = models.ForeignKey(ReadingContent)

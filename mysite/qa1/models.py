@@ -8,6 +8,10 @@ from django.contrib.auth.models import User
 # from readingmaterial.models import SubTopic1, ReadingTopic, ReadingContent
 from readingmaterial.models import *
 from subscription.models import *
+from django.utils.html import format_html
+from django.utils.html import mark_safe
+from django.contrib.humanize.templatetags.humanize import naturaltime 
+
 
 
 # class ReadingContentInline(admin.TabularInline):
@@ -28,87 +32,6 @@ class Question_Topic(models.Model):
 
 
 
-class Mcq_Question(models.Model):
-    # question_set = models.ManyToManyField(Question_Set, blank=True, null=True) 
-    # subject_set = models.ManyToManyField(Subject, blank=True, null=True)
-    # tag_set = models.ManyToManyField(Tag, blank=True, null=True)
-
-    question_text = models.CharField(max_length=400)   
-    mcq_image = models.ImageField(upload_to='images/mcq/', blank=True, null=True)
-    choice_a =  models.CharField(max_length=200, blank=True, null=True) 
-    choice_b =  models.CharField(max_length=200, blank=True, null=True) 
-    choice_c =  models.CharField(max_length=200, blank=True, null=True) 
-    choice_d =  models.CharField(max_length=200, blank=True, null=True) 
-    choice_e =  models.CharField(max_length=200, blank=True, null=True) 
-    choice_f =  models.CharField(max_length=200, blank=True, null=True) 
-    
-
-    mcq_answer = models.CharField(max_length=200, blank=True, null=True)  
-    mcq_answer2 = models.CharField(max_length=200, blank=True, null=True)
-
-    tag1 = models.CharField(max_length = 100, blank=True, null=True)
-    tag2 = models.CharField(max_length=100, blank=True, null=True)
-    tag3 = models.CharField(max_length=100, blank=True, null=True)
-    tag4 = models.CharField(max_length=100, blank=True, null=True)
-    tag5 = models.CharField(max_length=100, blank=True, null=True)
-
-    tag_topic = models.CharField(max_length=100, blank=True, null=True)
-    tag_sub_topic = models.CharField(max_length=100, blank=True, null=True)
-    tag_content = models.CharField(max_length=100, blank=True, null=True)
-
-    tag_inconsistent = models.CharField(max_length=200, blank=True, null=True)
-
-
-
-
-
-
-    explanation_text = models.TextField( blank=True, null=True)
-    explanation_image = models.ImageField(upload_to='images/mcq/', blank=True, null=True)
-
-    pub_date = models.DateTimeField('Publishing Date: ', blank=True, null=True)
-    edit_date = models.DateTimeField('Editing Date: ', blank=True, null=True)
-
-    uploader = models.ForeignKey(User, blank=True, null=True)
-
-    subtopic1 = models.ForeignKey(SubTopic1, blank=True, null=True,
-        verbose_name='Sub-Topic')
-    reading_topic = models.ForeignKey(ReadingTopic, blank=True, null=True,
-        verbose_name='Topic ')
-
-    reading_content = models.ForeignKey(ReadingContent, blank=True, null=True,
-        verbose_name='Reading Content  ')
-
-
-    def update_date(self):
-        if (not self.pub_date):
-            self.pub_date = timezone.now()
-
-        self.edit_date = timezone.now()
-        self.save()  
-
-
-
-
-
-    def __unicode__(self):
-        # s = ""
-        # s = "Q: " + str(self.question_text)
-        # s += " Tag: " + str(self.tag1)
-        #return "%50s %10s %10s %10s" % (self.question_text, self.tag1, self.tag2, self.tag3)
-        # s = "{:30}  {:10} {:10}".format(self.question_text, self.tag1, self.tag2)
-        # s = "..        alamin........  qartqewrewerwrewqrrqewreqwerq34521erfdsasdfasdfdfgwe45243erafadsfq435   b"
-       
-        # s = 'Q: %s ..|||.. .t_topic:%s .t_sub_topic:%s .t_content:%s .t1:%s .t2:%s .t3:%s .t4:%s .t5:%s' % (self.question_text,
-        #  self.tag_topic, self.tag_sub_topic, 
-        #     self.tag_content, self.tag1, self.tag2, self.tag3, self.tag4, self.tag5)
-
-
-        return  self.question_text
-
-    class Meta:
-        verbose_name=" Individual MCQ Questions "
-
 
 class Question_Set(models.Model):  
     question_set_text = models.CharField(max_length=200, verbose_name="Question Set")  
@@ -118,7 +41,7 @@ class Question_Set(models.Model):
     subtopic1 = models.ForeignKey(SubTopic1, blank=True, null=True, verbose_name="Sub Topic Name")
     reading_topic = models.ForeignKey(ReadingTopic,  blank=True, null=True)
 
-    mcq_question = models.ManyToManyField(Mcq_Question, blank=True, null=True)  
+    # mcq_question = models.ManyToManyField(Mcq_Question, blank=True, null=True)  
     # reading_content = models.ForeignKey(ReadingContent, blank=True, null=True)
 
     pub_date = models.DateTimeField('Publishing Date: ', blank=True, null=True)
@@ -179,10 +102,103 @@ class Question_Set(models.Model):
 
         
     def __unicode__(self):
-        return self.question_set_text
+        return (self.question_set_text)
 
     class Meta:
         verbose_name="Question Set"
+
+
+
+
+
+class Mcq_Question(models.Model):
+    # question_set = models.ManyToManyField(Question_Set, blank=True, null=True) 
+    # subject_set = models.ManyToManyField(Subject, blank=True, null=True)
+    # tag_set = models.ManyToManyField(Tag, blank=True, null=True)
+
+    question_text = models.CharField(max_length=400)   
+    mcq_image = models.ImageField(upload_to='images/mcq/', blank=True, null=True)
+    choice_a =  models.CharField(max_length=200) 
+    choice_b =  models.CharField(max_length=200) 
+    choice_c =  models.CharField(max_length=200) 
+    choice_d =  models.CharField(max_length=200) 
+
+
+    choice_e =  models.CharField(max_length=200, blank=True, null=True) 
+    choice_f =  models.CharField(max_length=200, blank=True, null=True) 
+    
+
+    mcq_answer = models.CharField(max_length=200)  
+    # mcq_answer2 = models.CharField(max_length=200, blank=True, null=True)
+
+    tag1 = models.CharField(max_length = 100, blank=True, null=True)
+    tag2 = models.CharField(max_length=100, blank=True, null=True)
+    tag3 = models.CharField(max_length=100, blank=True, null=True)
+    tag4 = models.CharField(max_length=100, blank=True, null=True)
+    tag5 = models.CharField(max_length=100, blank=True, null=True)
+
+    # tag_topic = models.CharField(max_length=100, blank=True, null=True)
+    # tag_sub_topic = models.CharField(max_length=100, blank=True, null=True)
+    # tag_content = models.CharField(max_length=100, blank=True, null=True)
+
+    # tag_inconsistent = models.CharField(max_length=200, blank=True, null=True)
+
+
+
+
+
+
+    explanation_text = models.TextField( blank=True, null=True)
+    explanation_image = models.ImageField(upload_to='images/mcq/', blank=True, null=True)
+
+    pub_date = models.DateTimeField('Publishing Date: ', blank=True, null=True)
+    edit_date = models.DateTimeField('Editing Date: ', blank=True, null=True)
+
+    uploader = models.ForeignKey(User, blank=True, null=True)
+
+
+    question_set = models.ForeignKey(Question_Set)
+    subtopic1 = models.ForeignKey(SubTopic1, blank=True, null=True,
+        verbose_name='Sub-Topic')
+    reading_topic = models.ForeignKey(ReadingTopic, blank=True, null=True,
+        verbose_name='Topic ')
+
+    reading_content = models.ForeignKey(ReadingContent, blank=True, null=True,
+        verbose_name='Reading Content  ')
+
+
+    def update_date(self):
+        if (not self.pub_date):
+            self.pub_date = timezone.now()
+
+        self.edit_date = timezone.now()
+        self.save()  
+
+
+
+
+
+    def __unicode__(self):
+        return  self.question_text
+    
+    def get_question_text(self):
+        return mark_safe('%s' % self.question_text)
+
+    def get_pub_date(self):
+        return naturaltime(self.pub_date)
+
+
+
+    class Meta:
+        verbose_name=" Individual MCQ Questions "
+
+
+
+
+
+
+
+
 
 
 

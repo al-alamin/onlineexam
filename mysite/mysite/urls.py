@@ -40,7 +40,7 @@ urlpatterns = [
     url(r'^question/', include ('question.urls')),
     url(r'^blog/',include('blog.urls')),
     url(r'^readingmaterial/', include ('readingmaterial.urls') ),
-    url(r'^admin/', admin.site.urls),
+
     url(r'^dashboard/', include ('dashboard.urls')),
     url(r'^feedback/', include ('feedback.urls')),
 
@@ -78,7 +78,10 @@ urlpatterns = [
     url(r'^ckeditor/browse/', never_cache(ckeditor_views.browse), name='ckeditor_browse'),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     
-    url('', include('social.apps.django_app.urls', namespace='social'))
+    url('', include('social.apps.django_app.urls', namespace='social')),
+    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+
+    url(r'^admin/', admin.site.urls),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

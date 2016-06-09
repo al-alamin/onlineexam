@@ -16,8 +16,7 @@ class Post_Admin(admin.ModelAdmin):
     search_fields = ('title_text', )
     list_display = ('title_text', 'user', 'pub_date', 'edit_date')
     filter_horizontal = ('tag',)
-    list_filter = ( 'pub_date', 'edit_date'
-                   )
+    list_filter = ( 'pub_date', 'edit_date')
 
     form = Writepost_Form
 

@@ -197,7 +197,7 @@ class ReadingContent_Admin(admin.ModelAdmin):
 
 class Quick_Question_Admin(admin.ModelAdmin):
     search_fields = ('quick_question_text', )
-    list_filter = ('pub_date', 'edit_date')
+    list_filter = ('pub_date', 'edit_date','content')
     list_display = ('id','quick_question_text', 'uploader', 'content', 'pub_date', 'edit_date')
 
     raw_id_fields = ('content', )

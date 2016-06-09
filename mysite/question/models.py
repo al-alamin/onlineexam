@@ -37,9 +37,9 @@ class Upload_Question_From_Excel(models.Model):
 
 
 class Upload_Question_Set_From_Excel(models.Model):
-    question_set = models.ForeignKey(Question_Set, null=True, blank=True)
+    question_set = models.ForeignKey(Question_Set)
     tag = models.CharField(max_length=100, null=True, blank=True)
-    excel_file = models.FileField(upload_to='resource_files/' ,blank=True, null=True)
+    excel_file = models.FileField(upload_to='resource_files/mcq/')
 
     pub_date = models.DateTimeField('Publishing Date: ', blank=True, null=True)
     edit_date = models.DateTimeField('Editing Date: ', blank=True, null=True)
@@ -49,12 +49,36 @@ class Upload_Question_Set_From_Excel(models.Model):
             self.pub_date = timezone.now()
 
         self.edit_date = timezone.now()
-
         self.save()  
 
     def __unicode__(self):
+        return  str(self.question_set)
 
-        return  str(self.content)
+
+    class Meta:
+        permissions = (
+            ('excel_question_set_upload', 'excel_question_set_upload'),
+           
+        )
+
+
+
+class Upload_Quick_Question_From_Excel(models.Model):
+    reading_content = models.ForeignKey(ReadingContent)
+    # tag = models.CharField(max_length=100, null=True, blank=True)
+    excel_file = models.FileField(upload_to='resource_files/quickquestion/')
+
+    pub_date = models.DateTimeField('Publishing Date: ', blank=True, null=True)
+    edit_date = models.DateTimeField('Editing Date: ', blank=True, null=True)
+
+    def update_date(self):
+        if (not self.pub_date):
+            self.pub_date = timezone.now()
+        self.edit_date = timezone.now()
+        self.save()  
+
+    def __unicode__(self):
+        return  str("alamin")
 
 
     class Meta:

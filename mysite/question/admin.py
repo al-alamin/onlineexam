@@ -2,59 +2,158 @@ from django.contrib import admin
 
 # Register your models here.
 from .models import *
+from .forms import *
+
+from admin_method import *
+
 
 class Upload_Question_From_Excel_Admin(admin.ModelAdmin):
     review_template = 'exam/excelparsing.html'
-
     exclude = ('pub_date', 'edit_date')
+    form = Upload_Question_Set_From_Excel_Form
+
+    # raw_id_fields = ('content',)
 
 
     def save_model(self, request, obj, form, change):
         print ("*****in excel save method")
         print (obj)
-
-
 		# form = ExcelForm(request.POST, request.FILES)
         print ("\n this is a post method \n")
-        # if form.is_valid():
-        #     print ("the form is valid\n")
-        #     wb = openpyxl.load_workbook(request.FILES['file'])
-        #     sheet = wb.get_sheet_by_name('Sheet1')
-        #     print ("\n\n type of sheet is: " + str(type(sheet)))
-        #     for row in range(1, 4):
-        #         if ((sheet.cell(row=row, column=1).value) is None):
-        #             print ("in if part: " + str(sheet.cell(row=row, column=1).value))
-        #             break
 
-        #         q = Mcq_Question(question_text=str(sheet.cell(row=row, column=1).value))
-        #         #q = Mcq_Question(question_text="alamin is hungry now")
-        #         q.save()
-        #         c1 = str(sheet.cell(row=row, column=2).value)
-        #         c2 = str(sheet.cell(row=row, column=3).value)
-        #         c3 = str(sheet.cell(row=row, column=4).value)
-        #         c4 = str(sheet.cell(row=row, column=5).value)
 
-        #         a = str(sheet.cell(row=row, column=6).value)
 
-        #         t1 = str(sheet.cell(row=row, column=7).value)
-        #         t2 = str(sheet.cell(row=row, column=8).value)
 
-        #         q.choice_a = c1
-        #         q.choice_b = c2
-        #         q.choice_c = c3
-        #         q.choice_d = c4
+class Upload_Question_Set_From_Excel_Admin(admin.ModelAdmin):
+    review_template = 'exam/excelparsing.html'
+    exclude = ('pub_date', 'edit_date')
+    form = Upload_Question_Set_From_Excel_Form
+    raw_id_fields = ('question_set',)
 
-        #         q.mcq_answer = a
-        #         q.tag1 = t1
-        #         q.tag2 = t2
-        #         #q.tag3 = t3
 
-        #         q.save()
+    def save_model(self, request, obj, form, change):
+        print ("\n\n************ upload excel question set\n")
 
-        #         t3 = str(sheet.cell(row=row, column=9).value)
+        question_set = obj.question_set
+        excel_file = obj.excel_file
+
+        wb = openpyxl.load_workbook(excel_file)
+        sheet = wb.get_sheet_by_name('Sheet1')
+
+        mcq_list = []
+
+        for row in range(10, 10000):
+            if ((sheet.cell(row=row, column=1).value) is None):
+                print ("in if part: " + str(sheet.cell(row=row, column=1).value))
+                break
+            q = create_mcq_from_excel(request, sheet, row, question_set)
+
+            if (not q):
+                break
+
+            # print (q)
+
+            mcq_list.append(q)
+
+            # if (question_set):
+            #     # q.tag_content = str(content)
+            #     question_set.mcq_question.add(q)
+
+            
+
+
+            # q.save()
+
+            # # question_set.individual_mcq_marks = marks
+            # # question_set.negative_marking_percentage = negative_marks  
+            # question_set.save()
+
+            # t3 = str(sheet.cell(row=row, column=9).value)
+
+
+
+
+
+
+        print(mcq_list)
+        func()
+        ret = save_mcq(request, mcq_list, question_set)
+        
+        obj.save()
+
+        if (ret):
+            messages.add_message(request, messages.INFO, '%s MCQ Question Has Been Added To The Question Set' % ret)
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Upload_Quick_Question_From_Excel_Admin(admin.ModelAdmin):
+    # review_template = 'exam/excelparsing.html'
+    exclude = ('pub_date', 'edit_date')
+    form = Upload_Quick_Question_From_Excel_Form
+    raw_id_fields = ('reading_content',)
+
+
+    def save_model(self, request, obj, form, change):
+        print ("\n\n************ quick question \n")
+        # question_set = obj.question_set
+        # excel_file = obj.excel_file
+
+
+        reading_content = obj.reading_content
+        excel_file = obj.excel_file
+
+        wb = openpyxl.load_workbook(excel_file)
+        sheet = wb.get_sheet_by_name('Sheet1')
+
+        quick_question_list = []
+
+        for row in range(10, 10000):
+            if ((sheet.cell(row=row, column=1).value) is None):
+                # print ("in if part: " + str(sheet.cell(row=row, column=1).value))
+                break
+            q = create_quick_question_from_excel(request, sheet, row, reading_content)
+
+            if (not q):
+                break
+
+            # print (q)
+
+            quick_question_list.append(q)
+
+        ret = save_quick_question(request, quick_question_list, reading_content)
+        
+        # obj.save()
+
+        if (ret):
+            messages.add_message(request, messages.INFO, '%s Quick Question Has Been Added To The Question Set' % ret)
+
+
+        obj.save()
+
 
 
 
 
 
 # admin.site.register(Upload_Question_From_Excel, Upload_Question_From_Excel_Admin)
+admin.site.register(Upload_Question_Set_From_Excel, Upload_Question_Set_From_Excel_Admin)
+
+admin.site.register(Upload_Quick_Question_From_Excel, Upload_Quick_Question_From_Excel_Admin)
+
+
+
+
+
+
+
+

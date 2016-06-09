@@ -23,6 +23,12 @@ class Upload_Question_Set_From_Excel_Form(ModelForm):
         exclude = ['pub_date', 'edit_date']
 
 
+class Upload_Quick_Question_From_Excel_Form(ModelForm):
+    class Meta:
+        model = Upload_Quick_Question_From_Excel
+        exclude = ['pub_date', 'edit_date']
+
+
 
 # 
 

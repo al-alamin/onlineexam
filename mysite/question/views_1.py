@@ -238,8 +238,6 @@ def reading_content_question(request, reading_content_id):
 
 
 def check_eligibility(request,  question_set_id):
-
-
     question_set = Question_Set.objects.filter(id = question_set_id).first()
     subscription_plan = []
     special_plan = []
