@@ -1,0 +1,6 @@
+openpyxl
+django-ckeditor
+django-wysiwyg
+python-social-auth
+pillow
+
