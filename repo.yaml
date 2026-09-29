@@ -1,0 +1,16 @@
+schema_version: 1
+summary: An undergraduate Django demonstration project for learning an online exam
+  system and cloud deployment.
+state: unknown
+intended_readers:
+- Developers learning from or maintaining the Django online-exam demonstration.
+consult_when:
+- Studying the demo or changing its Django application and deployment documentation.
+watch_when:
+- Changes to the demo source under mysite/ or its setup/deployment documentation.
+current_capabilities:
+- The repository contains a mysite/ Django project, identified by README as an online
+  exam demonstration.
+- README lists a historical PythonAnywhere demo URL; availability and deployment are
+  unverified.
+planned_capabilities: []
